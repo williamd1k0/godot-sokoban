@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=1]
+
+[ext_resource path="res://base/TileMapBase.tscn" type="PackedScene" id=1]
+[ext_resource path="res://base/blocks.gd" type="Script" id=2]
+
+[node name="Blocks" instance=ExtResource( 1 )]
+
+script/script = ExtResource( 2 )
+block_id = 3
+
+

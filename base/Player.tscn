@@ -6,7 +6,6 @@
 
 [node name="Player" instance=ExtResource( 1 )]
 
-tile_data = IntArray( 262150, 4 )
 script/script = ExtResource( 2 )
 base_speed = 200.0
 move_size = 64
