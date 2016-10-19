@@ -72,6 +72,7 @@ func accept_move(dir):
 	move_dir = dir
 	moving = true
 
+
 func _input(event):
 	if not moving:
 		if event.is_action_pressed("ui_up"):

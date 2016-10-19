@@ -8,6 +8,8 @@ func _ready():
 	pass
 
 
-func is_passable(tilev):
+func is_passable(x, y):
+	return get_cell(x, y) in passable_tiles
+
+func is_passablev(tilev):
 	return get_cellv(tilev) in passable_tiles
-	
