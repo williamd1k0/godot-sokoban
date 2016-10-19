@@ -3,67 +3,85 @@ extends TileMap
 onready var start_pos = get_used_cells()[0]
 onready var position = start_pos
 onready var body = get_node("body")
+
+export var base_speed = 100.0
+export var move_size = 64
+export var debug = false
+
 var moves = 0
 var moving = false
 var move_dir = null
+var move_log = []
+var delta_ = 0
+
+signal move_request(dir, map_pos)
+
 
 func _ready():
 	print(start_pos)
+	move_log.append(start_pos)
 	set_cellv(position, 5)
-	body.set_pos(map_to_world(position) + Vector2(32, 32))
+	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
+	body.set_hidden(false)
 	set_process_input(true)
 	set_fixed_process(true)
 
 func _fixed_process(delta):
+	delta_ = delta
 	if moving:
-		var map_pos = map_to_world(position) + Vector2(32, 32)
-		print(body.get_global_pos())
 		if move_dir == "up":
-			body.move(Vector2(0, -1) * 100 * delta)
-			print(abs(body.get_global_pos().y - map_pos.y))
-			if abs(body.get_global_pos().y - map_pos.y) >= 64:
-				moving = false
-				update_map_pos(Vector2(0, -1))
+			check_move(Vector2(0, -1))
 		elif move_dir == "down":
-			body.move(Vector2(0, 1) * 100 * delta)
-			print(abs(body.get_global_pos().y - map_pos.y))
-			if abs(body.get_global_pos().y - map_pos.y) >= 64:
-				moving = false
-				update_map_pos(Vector2(0, 1))
+			check_move(Vector2(0, 1))
 		elif move_dir == "left":
-			body.move(Vector2(-1, 0) * 100 * delta)
-			print(abs(body.get_global_pos().x - map_pos.x))
-			if abs(body.get_global_pos().x - map_pos.x) >= 64:
-				moving = false
-				update_map_pos(Vector2(-1, 0))
+			check_move(Vector2(-1, 0))
 		elif move_dir == "right":
-			body.move(Vector2(1, 0) * 100 * delta)
-			print(abs(body.get_global_pos().x - map_pos.x))
-			if abs(body.get_global_pos().x - map_pos.x) >= 64:
-				moving = false
-				update_map_pos(Vector2(1, 0))
-				
+			check_move(Vector2(1, 0))
+
+func check_move(move):
+	var map_pos = map_to_world(position) + Vector2(move_size/2, move_size/2)
+	var map_index = 0
+	var global_index = 0
+	if move.x != 0:
+		map_index = map_pos.x
+		global_index = body.get_global_pos().x
+	else:
+		map_index = map_pos.y
+		global_index = body.get_global_pos().y
+		
+	body.move(move * base_speed * delta_)
+	if abs(global_index - map_index) >= move_size:
+		moving = false
+		update_map_pos(move)
+
 
 func update_map_pos(pos):
 	set_cellv(position, -1)
 	position += pos
+	move_log.append(position)
+	print(move_log)
 	set_cellv(position, 5)
-	body.set_pos(map_to_world(position) + Vector2(32, 32))
+	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
+
+func request_move(dir):
+	emit_signal("move_request", dir, position)
+	if debug:
+		accept_move(dir)
+
+func accept_move(dir):
+	move_dir = dir
+	moving = true
 
 func _input(event):
 	if not moving:
 		if event.is_action_pressed("ui_up"):
-			moving = true
-			move_dir = "up"
+			request_move("up")
 		elif event.is_action_pressed("ui_down"):
-			moving = true
-			move_dir = "down"
+			request_move("down")
 		elif event.is_action_pressed("ui_left"):
-			moving = true
-			move_dir = "left"
+			request_move("left")
 		elif event.is_action_pressed("ui_right"):
-			moving = true
-			move_dir = "right"
+			request_move("right")
 	
 	print(get_used_cells())
 	print(moves)
