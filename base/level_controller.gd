@@ -4,8 +4,15 @@ onready var static_tiles = get_node("StaticTiles")
 onready var player = get_node("Player")
 onready var blocks = get_node("Blocks")
 
+export var slot_id = 2
+var slots = null
+var slot_count = 0
+var filled_slots = 0
+
 func _ready():
-	pass
+	slots = static_tiles.get_cells_by_id(slot_id)
+	slot_count = slots.size()
+	print(slots)
 
 
 func can_pass(dir, map_pos):
@@ -51,3 +58,16 @@ func _on_Player_move_request( dir, map_pos ):
 		player.accept_move(dir)
 	else:
 		print("Cant Pass!!")
+
+func check_slots():
+	print("Slots: "+str(filled_slots))
+	if filled_slots == slot_count:
+		print("GAME OVER")
+
+func _on_Blocks_block_push():
+	filled_slots = 0
+	for slot in slots:
+		if blocks.has_block(slot):
+			filled_slots += 1
+	check_slots()
+

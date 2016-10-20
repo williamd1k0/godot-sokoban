@@ -4,6 +4,7 @@ onready var start_pos = get_used_cells()[0]
 onready var position = start_pos
 onready var body = get_node("body")
 
+export var reference_tile = 5
 export var base_speed = 100.0
 export var move_size = 64
 export var debug = false
@@ -15,12 +16,12 @@ var move_log = []
 var delta_ = 0
 
 signal move_request(dir, map_pos)
-
+signal move_update
 
 func _ready():
 	print(start_pos)
 	move_log.append(start_pos)
-	set_cellv(position, 5)
+	set_cellv(position, reference_tile)
 	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
 	body.set_hidden(false)
 	set_process_input(true)
@@ -60,8 +61,10 @@ func update_map_pos(pos):
 	position += pos
 	move_log.append(position)
 	print(move_log)
-	set_cellv(position, 5)
+	set_cellv(position, reference_tile)
 	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
+	emit_signal("move_update")
+
 
 func request_move(dir):
 	emit_signal("move_request", dir, position)

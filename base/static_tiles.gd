@@ -1,11 +1,11 @@
 extends TileMap
 
 
-export var passable_tiles = [1]
+export var passable_tiles = [1, 2]
 
 
 func _ready():
-	pass
+	print(get_cells_by_id(0))
 
 
 func is_passable(x, y):
@@ -13,3 +13,11 @@ func is_passable(x, y):
 
 func is_passablev(tilev):
 	return get_cellv(tilev) in passable_tiles
+
+func get_cells_by_id(id):
+	var cells = []
+	for pos in get_used_cells():
+		if get_cellv(pos) == id:
+			cells.append(pos)
+	return cells
+	
