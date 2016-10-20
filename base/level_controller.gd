@@ -9,10 +9,14 @@ var slots = null
 var slot_count = 0
 var filled_slots = 0
 
+signal start(slots_left)
+signal solved
+signal update(slots_left)
+
 func _ready():
 	slots = static_tiles.get_cells_by_id(slot_id)
 	slot_count = slots.size()
-	print(slots)
+	emit_signal("start", slot_count)
 
 
 func can_pass(dir, map_pos):
@@ -62,12 +66,14 @@ func _on_Player_move_request( dir, map_pos ):
 func check_slots():
 	print("Slots: "+str(filled_slots))
 	if filled_slots == slot_count:
-		print("GAME OVER")
+		emit_signal("solved")
 
 func _on_Blocks_block_push():
 	filled_slots = 0
 	for slot in slots:
 		if blocks.has_block(slot):
 			filled_slots += 1
+	if filled_slots > 0:
+		emit_signal("update", slot_count - filled_slots)
 	check_slots()
 
