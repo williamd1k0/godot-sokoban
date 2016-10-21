@@ -3,6 +3,7 @@ extends TileMap
 onready var start_pos = get_used_cells()[0]
 onready var position = start_pos
 onready var body = get_node("body")
+onready var anime = get_node("body/anime")
 
 export var reference_tile = 5
 export var base_speed = 100.0
@@ -29,7 +30,9 @@ func _ready():
 
 func _fixed_process(delta):
 	delta_ = delta
-	if moving:
+	if not moving:
+		input_update()
+	else:
 		if move_dir == "up":
 			check_move(Vector2(0, -1))
 		elif move_dir == "down":
@@ -38,6 +41,19 @@ func _fixed_process(delta):
 			check_move(Vector2(-1, 0))
 		elif move_dir == "right":
 			check_move(Vector2(1, 0))
+
+func input_update():
+	if Input.is_action_pressed("ui_up"):
+		request_move("up")
+	elif Input.is_action_pressed("ui_down"):
+		request_move("down")
+	elif Input.is_action_pressed("ui_left"):
+		request_move("left")
+	elif Input.is_action_pressed("ui_right"):
+		request_move("right")
+	else:
+		print("IDLE")
+		anime.play("idle-"+anime.get_current_animation().split("-")[1])
 
 func check_move(move):
 	var map_pos = map_to_world(position) + Vector2(move_size/2, move_size/2)
@@ -74,19 +90,4 @@ func request_move(dir):
 func accept_move(dir):
 	move_dir = dir
 	moving = true
-
-
-func _input(event):
-	if not moving:
-		if event.is_action_pressed("ui_up"):
-			request_move("up")
-		elif event.is_action_pressed("ui_down"):
-			request_move("down")
-		elif event.is_action_pressed("ui_left"):
-			request_move("left")
-		elif event.is_action_pressed("ui_right"):
-			request_move("right")
-	
-	print(get_used_cells())
-	print(moves)
-	
+	anime.play("walk-"+dir)
