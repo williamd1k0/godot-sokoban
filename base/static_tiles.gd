@@ -1,7 +1,7 @@
 extends TileMap
 
 
-export var passable_tiles = [1, 2]
+export var passable_tiles = [-1]
 
 
 func _ready():

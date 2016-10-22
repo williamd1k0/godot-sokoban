@@ -4,7 +4,8 @@ onready var static_tiles = get_tree().get_nodes_in_group("static-layer")
 onready var player = get_node("Player")
 onready var blocks = get_node("Blocks")
 
-export var slot_id = 2
+export var slot_id = 1
+export(NodePath) var slot_tilemap
 var slots = null
 var slot_count = 0
 var filled_slots = 0
@@ -19,11 +20,8 @@ func _ready():
 	emit_signal("start", slot_count)
 
 func get_slots():
-	var map_pos = null
-	for layer in static_tiles:
-		map_pos = layer.get_cells_by_id(slot_id)
-		if map_pos.size() > 0:
-			return map_pos
+	return get_node(slot_tilemap).get_cells_by_id(slot_id)
+
 
 func is_passable(map_pos):
 	for layer in static_tiles:

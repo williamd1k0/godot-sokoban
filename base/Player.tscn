@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=1]
+[gd_scene load_steps=13 format=1]
 
 [ext_resource path="res://base/TileMapBase.tscn" type="PackedScene" id=1]
-[ext_resource path="res://base/player.gd" type="Script" id=2]
-[ext_resource path="res://textures/player.png" type="Texture" id=3]
+[ext_resource path="res://tilesets/player_tiles.tres" type="TileSet" id=2]
+[ext_resource path="res://base/player.gd" type="Script" id=3]
+[ext_resource path="res://textures/player.png" type="Texture" id=4]
 
 [sub_resource type="Animation" id=1]
 
@@ -100,11 +101,12 @@ tracks/0/keys = { "times":FloatArray( 0, 0.3, 0.6, 0.9 ), "transitions":FloatArr
 
 [node name="Player" instance=ExtResource( 1 )]
 
-script/script = ExtResource( 2 )
-reference_tile = 5
+tile_set = ExtResource( 2 )
+script/script = ExtResource( 3 )
+reference_tile = 1
 base_speed = 70.0
 move_size = 64
-debug = true
+debug = false
 
 [node name="body" type="KinematicBody2D" parent="."]
 
@@ -116,7 +118,7 @@ collision/margin = 0.08
 
 [node name="Sprite" type="Sprite" parent="body"]
 
-texture = ExtResource( 3 )
+texture = ExtResource( 4 )
 vframes = 12
 frame = 9
 

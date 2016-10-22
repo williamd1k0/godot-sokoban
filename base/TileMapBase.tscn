@@ -1,11 +1,9 @@
-[gd_scene load_steps=2 format=1]
-
-[ext_resource path="res://base/sokoban_objects.tres" type="TileSet" id=1]
+[gd_scene format=1]
 
 [node name="TileMapBase" type="TileMap"]
 
 mode = 0
-tile_set = ExtResource( 1 )
+tile_set = null
 cell/size = Vector2( 64, 64 )
 cell/quadrant_size = 16
 cell/custom_transform = Matrix32( 1, 0, 0, 1, 0, 0 )
