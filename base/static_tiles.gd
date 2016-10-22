@@ -9,10 +9,10 @@ func _ready():
 
 
 func is_passable(x, y):
-	return get_cell(x, y) in passable_tiles
+	return get_cell(x, y) in passable_tiles or get_cell(x, y) == -1
 
 func is_passablev(tilev):
-	return get_cellv(tilev) in passable_tiles
+	return get_cellv(tilev) in passable_tiles or get_cellv(tilev) == -1
 
 func get_cells_by_id(id):
 	var cells = []

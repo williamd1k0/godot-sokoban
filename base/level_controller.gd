@@ -1,6 +1,6 @@
 extends Node2D
 
-onready var static_tiles = get_node("StaticTiles")
+onready var static_tiles = get_tree().get_nodes_in_group("static-layer")
 onready var player = get_node("Player")
 onready var blocks = get_node("Blocks")
 
@@ -14,10 +14,22 @@ signal solved
 signal update(slots_left)
 
 func _ready():
-	slots = static_tiles.get_cells_by_id(slot_id)
+	slots = get_slots()
 	slot_count = slots.size()
 	emit_signal("start", slot_count)
 
+func get_slots():
+	var map_pos = null
+	for layer in static_tiles:
+		map_pos = layer.get_cells_by_id(slot_id)
+		if map_pos.size() > 0:
+			return map_pos
+
+func is_passable(map_pos):
+	for layer in static_tiles:
+		if not layer.is_passablev(map_pos):
+			return false
+	return true
 
 func can_pass(dir, map_pos):
 	var map_posv = null
@@ -25,34 +37,34 @@ func can_pass(dir, map_pos):
 		map_posv = Vector2(map_pos.x, map_pos.y-1)
 		if blocks.has_block(map_posv):
 			return check_push(map_posv, Vector2(map_posv.x, map_posv.y-1))
-		if static_tiles.is_passablev(map_posv):
+		if is_passable(map_posv):
 			return true
 			
 	elif dir == "down":
 		map_posv = Vector2(map_pos.x, map_pos.y+1)
 		if blocks.has_block(map_posv):
 			return check_push(map_posv, Vector2(map_posv.x, map_posv.y+1))
-		if static_tiles.is_passablev(map_posv):
+		if is_passable(map_posv):
 			return true
 			
 	elif dir == "left":
 		map_posv = Vector2(map_pos.x-1, map_pos.y)
 		if blocks.has_block(map_posv):
 			return check_push(map_posv, Vector2(map_posv.x-1, map_posv.y))
-		if static_tiles.is_passablev(map_posv):
+		if is_passable(map_posv):
 			return true
 			
 	elif dir == "right":
 		map_posv = Vector2(map_pos.x+1, map_pos.y)
 		if blocks.has_block(map_posv):
 			return check_push(map_posv, Vector2(map_posv.x+1, map_posv.y))
-		if static_tiles.is_passablev(map_posv):
+		if is_passable(map_posv):
 			return true
 	return false
 
 func check_push(pos, to_pos):
 	print("Cheking push")
-	if not blocks.has_block(to_pos) and static_tiles.is_passablev(to_pos):
+	if not blocks.has_block(to_pos) and is_passable(to_pos):
 		blocks.push_blockv(pos, to_pos)
 		return true
 	return false
