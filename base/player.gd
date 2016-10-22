@@ -20,16 +20,15 @@ signal move_request(dir, map_pos)
 signal move_update
 
 func _ready():
-	print(start_pos)
-	move_log.append(start_pos)
 	set_cellv(position, reference_tile)
 	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
 	body.set_hidden(false)
-	set_process_input(true)
 	set_fixed_process(true)
 
 func _fixed_process(delta):
 	delta_ = delta
+	if Input.is_action_just_pressed("ui_select") and move_log.size() > 0:
+		back_log()
 	if not moving:
 		input_update()
 	else:
@@ -73,9 +72,8 @@ func check_move(move):
 
 func update_map_pos(pos):
 	set_cellv(position, -1)
-	position += pos
 	move_log.append(position)
-	print(move_log)
+	position += pos
 	set_cellv(position, reference_tile)
 	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
 	emit_signal("move_update")
@@ -90,3 +88,11 @@ func accept_move(dir):
 	move_dir = dir
 	moving = true
 	anime.play("walk-"+dir)
+
+func back_log():
+	set_cellv(position, -1)
+	position = move_log[-1]
+	set_cellv(position, reference_tile)
+	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
+	move_log.pop_back()
+	
