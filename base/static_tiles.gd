@@ -5,7 +5,7 @@ export var passable_tiles = [-1]
 
 
 func _ready():
-	print(get_cells_by_id(0))
+	pass
 
 
 func is_passable(x, y):

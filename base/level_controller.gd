@@ -34,36 +34,36 @@ func can_pass(dir, map_pos):
 	if dir == "up":
 		map_posv = Vector2(map_pos.x, map_pos.y-1)
 		if blocks.has_block(map_posv):
-			return check_push(map_posv, Vector2(map_posv.x, map_posv.y-1))
+			return check_push(map_posv, Vector2(map_posv.x, map_posv.y-1), dir)
 		if is_passable(map_posv):
 			return true
 			
 	elif dir == "down":
 		map_posv = Vector2(map_pos.x, map_pos.y+1)
 		if blocks.has_block(map_posv):
-			return check_push(map_posv, Vector2(map_posv.x, map_posv.y+1))
+			return check_push(map_posv, Vector2(map_posv.x, map_posv.y+1), dir)
 		if is_passable(map_posv):
 			return true
 			
 	elif dir == "left":
 		map_posv = Vector2(map_pos.x-1, map_pos.y)
 		if blocks.has_block(map_posv):
-			return check_push(map_posv, Vector2(map_posv.x-1, map_posv.y))
+			return check_push(map_posv, Vector2(map_posv.x-1, map_posv.y), dir)
 		if is_passable(map_posv):
 			return true
 			
 	elif dir == "right":
 		map_posv = Vector2(map_pos.x+1, map_pos.y)
 		if blocks.has_block(map_posv):
-			return check_push(map_posv, Vector2(map_posv.x+1, map_posv.y))
+			return check_push(map_posv, Vector2(map_posv.x+1, map_posv.y), dir)
 		if is_passable(map_posv):
 			return true
 	return false
 
-func check_push(pos, to_pos):
+func check_push(pos, to_pos, dir):
 	print("Cheking push")
 	if not blocks.has_block(to_pos) and is_passable(to_pos):
-		blocks.push_blockv(pos, to_pos)
+		blocks.push_blockv(pos, to_pos, dir)
 		return true
 	return false
 

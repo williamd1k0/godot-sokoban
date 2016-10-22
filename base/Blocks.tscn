@@ -8,6 +8,10 @@
 
 tile_set = ExtResource( 2 )
 script/script = ExtResource( 3 )
+block_base = "res://base/BlockBase.tscn"
 block_id = 0
+reference_id = 1
+move_size = 64
+base_speed = 70
 
 
