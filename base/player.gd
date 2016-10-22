@@ -52,7 +52,6 @@ func input_update():
 	elif Input.is_action_pressed("ui_right"):
 		request_move("right")
 	else:
-		print("IDLE")
 		anime.play("idle-"+anime.get_current_animation().split("-")[1])
 
 func check_move(move):
