@@ -17,7 +17,14 @@ signal update(slots_left)
 func _ready():
 	slots = get_slots()
 	slot_count = slots.size()
+	set_process_input(true)
 	emit_signal("start", slot_count)
+
+func _input(event):
+	if event.is_action_pressed("ui_select"):
+		#player.back_log()
+		#blocks.back_log()
+		print("Rewind not implemented")
 
 func get_slots():
 	return get_node(slot_tilemap).get_cells_by_id(slot_id)

@@ -58,12 +58,21 @@ func check_move(move):
 
 func update_map_pos(move):
 	var to_pos = moving_block + move
+	blocks[moving_block].move_log.append(moving_block)
 	set_cellv(moving_block, -1)
 	set_cellv(to_pos, reference_id)
 	blocks[moving_block].set_pos(map_to_world(to_pos) + Vector2(move_size/2, move_size/2))
 	blocks[to_pos] = blocks[moving_block]
 	blocks.erase(moving_block)
 	emit_signal("block_push")
+
+func back_log():
+	for block in blocks.keys():
+		if blocks[block].move_log.size() > 0:
+			set_cellv(block, -1)
+			set_cellv(blocks[block].move_log[-1], reference_id)
+			blocks[block].set_pos(map_to_world(blocks[block].move_log[-1]) + Vector2(move_size/2, move_size/2))
+			blocks[block].move_log.pop_back()
 
 func has_block(pos):
 	return get_cellv(pos) != -1

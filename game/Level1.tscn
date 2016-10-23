@@ -18,6 +18,7 @@ tile_data = IntArray( 196612, 0 )
 
 [node name="Blocks" parent="LevelController"]
 
+transform/pos = Vector2( 1, 0 )
 tile_data = IntArray( 196613, 0, 262149, 0 )
 
 

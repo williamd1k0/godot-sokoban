@@ -27,8 +27,6 @@ func _ready():
 
 func _fixed_process(delta):
 	delta_ = delta
-	if Input.is_action_just_pressed("ui_select") and move_log.size() > 0:
-		back_log()
 	if not moving:
 		input_update()
 	else:
@@ -90,9 +88,10 @@ func accept_move(dir):
 	anime.play("walk-"+dir)
 
 func back_log():
-	set_cellv(position, -1)
-	position = move_log[-1]
-	set_cellv(position, reference_tile)
-	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
-	move_log.pop_back()
+	if move_log.size() > 0:
+		set_cellv(position, -1)
+		position = move_log[-1]
+		set_cellv(position, reference_tile)
+		body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
+		move_log.pop_back()
 	
