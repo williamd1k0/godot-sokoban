@@ -120,7 +120,7 @@ collision/margin = 0.08
 
 texture = ExtResource( 4 )
 vframes = 12
-frame = 9
+frame = 2
 
 [node name="anime" type="AnimationPlayer" parent="body"]
 

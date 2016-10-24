@@ -85,7 +85,8 @@ func request_move(dir):
 func accept_move(dir):
 	move_dir = dir
 	moving = true
-	anime.play("walk-"+dir)
+	if anime.get_current_animation() != "walk-"+dir:
+		anime.play("walk-"+dir)
 
 func back_log():
 	if move_log.size() > 0:
