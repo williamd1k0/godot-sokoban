@@ -1,7 +1,11 @@
-[gd_resource type="TileSet" load_steps=3 format=1]
+[gd_resource type="TileSet" load_steps=7 format=1]
 
 [ext_resource path="res://textures/floor.png" type="Texture" id=1]
 [ext_resource path="res://textures/reference.png" type="Texture" id=2]
+[ext_resource path="res://textures/grass1.png" type="Texture" id=3]
+[ext_resource path="res://textures/streets1.png" type="Texture" id=4]
+[ext_resource path="res://textures/streets2.png" type="Texture" id=5]
+[ext_resource path="res://textures/streets2_a.png" type="Texture" id=6]
 
 [resource]
 
@@ -21,4 +25,36 @@
 1/navigation_offset = Vector2( 32, 32 )
 1/shape_offset = Vector2( 0, 0 )
 1/shapes = [  ]
+2/name = "grass"
+2/texture = ExtResource( 3 )
+2/tex_offset = Vector2( 0, 0 )
+2/region = Rect2( 0, 0, 64, 64 )
+2/occluder_offset = Vector2( 32, 32 )
+2/navigation_offset = Vector2( 32, 32 )
+2/shape_offset = Vector2( 0, 0 )
+2/shapes = [  ]
+3/name = "street1"
+3/texture = ExtResource( 4 )
+3/tex_offset = Vector2( 0, 0 )
+3/region = Rect2( 0, 0, 64, 64 )
+3/occluder_offset = Vector2( 32, 32 )
+3/navigation_offset = Vector2( 32, 32 )
+3/shape_offset = Vector2( 0, 0 )
+3/shapes = [  ]
+4/name = "street2"
+4/texture = ExtResource( 5 )
+4/tex_offset = Vector2( 0, 0 )
+4/region = Rect2( 0, 0, 64, 64 )
+4/occluder_offset = Vector2( 32, 32 )
+4/navigation_offset = Vector2( 32, 32 )
+4/shape_offset = Vector2( 0, 0 )
+4/shapes = [  ]
+5/name = "street3"
+5/texture = ExtResource( 6 )
+5/tex_offset = Vector2( 0, 0 )
+5/region = Rect2( 0, 0, 64, 64 )
+5/occluder_offset = Vector2( 32, 32 )
+5/navigation_offset = Vector2( 32, 32 )
+5/shape_offset = Vector2( 0, 0 )
+5/shapes = [  ]
 

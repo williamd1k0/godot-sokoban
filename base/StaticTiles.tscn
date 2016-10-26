@@ -5,7 +5,6 @@
 
 [node name="StaticTiles" groups=[ "static-layer" ] instance=ExtResource( 1 )]
 
-tile_set = null
 script/script = ExtResource( 2 )
 passable_tiles = [ 1, 2 ]
 
