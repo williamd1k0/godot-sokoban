@@ -13,7 +13,6 @@ export var debug = false
 var moves = 0
 var moving = false
 var move_dir = null
-var move_log = []
 var delta_ = 0
 
 signal move_request(dir, map_pos)
@@ -70,7 +69,6 @@ func check_move(move):
 
 func update_map_pos(pos):
 	set_cellv(position, -1)
-	move_log.append(position)
 	position += pos
 	set_cellv(position, reference_tile)
 	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
@@ -80,19 +78,24 @@ func update_map_pos(pos):
 func request_move(dir):
 	emit_signal("move_request", dir, position)
 	if debug:
-		accept_move(dir)
+		accept_move(dir, "walk")
 
-func accept_move(dir):
+func accept_move(dir, mode):
 	move_dir = dir
 	moving = true
-	if anime.get_current_animation() != "walk-"+dir:
-		anime.play("walk-"+dir)
+	if anime.get_current_animation() != mode+"-"+dir:
+		anime.play(mode+"-"+dir)
 
-func back_log():
-	if move_log.size() > 0:
-		set_cellv(position, -1)
-		position = move_log[-1]
-		set_cellv(position, reference_tile)
-		body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
-		move_log.pop_back()
+func get_history():
+	return [position]
+
+# REWIND TODO
+func back_history(data):
+	pass
+	#if move_log.size() > 0:
+	#	set_cellv(position, -1)
+	#	position = move_log[-1]
+	#	set_cellv(position, reference_tile)
+	#	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
+	#	move_log.pop_back()
 	

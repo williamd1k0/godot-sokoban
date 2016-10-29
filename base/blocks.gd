@@ -35,6 +35,9 @@ func _fixed_process(delta):
 		elif move_dir == "right":
 			check_move(Vector2(1, 0))
 
+func has_block(pos):
+	return get_cellv(pos) != -1
+
 func push_blockv(map_pos, to_pos, dir):
 	move_dir = dir
 	moving_block = map_pos
@@ -58,13 +61,25 @@ func check_move(move):
 
 func update_map_pos(move):
 	var to_pos = moving_block + move
-	blocks[moving_block].move_log.append(moving_block)
 	set_cellv(moving_block, -1)
 	set_cellv(to_pos, reference_id)
 	blocks[moving_block].set_pos(map_to_world(to_pos) + Vector2(move_size/2, move_size/2))
 	blocks[to_pos] = blocks[moving_block]
 	blocks.erase(moving_block)
 	emit_signal("block_push")
+
+func get_history():
+	var history = []
+	for block in blocks.keys():
+		#print(world_to_map(blocks[block].get_pos()))
+		#print(get_cellv(world_to_map(blocks[block].get_pos())))
+		history.append([block, world_to_map(blocks[block].get_pos())])
+	return history
+
+
+# REWIND TODO
+func back_history(data):
+	pass
 
 func back_log():
 	for block in blocks.keys():
@@ -74,5 +89,4 @@ func back_log():
 			blocks[block].set_pos(map_to_world(blocks[block].move_log[-1]) + Vector2(move_size/2, move_size/2))
 			blocks[block].move_log.pop_back()
 
-func has_block(pos):
-	return get_cellv(pos) != -1
+

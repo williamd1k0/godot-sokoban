@@ -9,6 +9,10 @@ export(NodePath) var slot_tilemap
 var slots = null
 var slot_count = 0
 var filled_slots = 0
+var move_count = 0
+var pushing = false
+var game_layers = null
+var game_history = []
 
 signal start(slots_left)
 signal solved
@@ -17,13 +21,23 @@ signal update(slots_left)
 func _ready():
 	slots = get_slots()
 	slot_count = slots.size()
+	game_layers = {
+		player.get_name(): player,
+		blocks.get_name(): blocks
+	}
+	push_history()
 	set_process_input(true)
 	emit_signal("start", slot_count)
 
+func push_history():
+	game_history.append({})
+	for layer in game_layers:
+		game_history[move_count][layer] = game_layers[layer].get_history()
+	print(game_history)
+
 func _input(event):
 	if event.is_action_pressed("ui_select"):
-		#player.back_log()
-		#blocks.back_log()
+		print(game_history[-1])
 		print("Rewind not implemented")
 
 func get_slots():
@@ -70,13 +84,18 @@ func can_pass(dir, map_pos):
 func check_push(pos, to_pos, dir):
 	print("Cheking push")
 	if not blocks.has_block(to_pos) and is_passable(to_pos):
+		pushing = true
 		blocks.push_blockv(pos, to_pos, dir)
 		return true
 	return false
 
 func _on_Player_move_request( dir, map_pos ):
+	pushing = false
 	if can_pass(dir, map_pos):
-		player.accept_move(dir)
+		if pushing:
+			player.accept_move(dir, "push")
+		else:
+			player.accept_move(dir, "walk")
 	else:
 		print("Cant Pass!!")
 
