@@ -11,6 +11,13 @@ var moving = false
 var move_dir = null
 var delta_ = null
 
+var direction = {
+	"up": Vector2(0, -1),
+	"down": Vector2(0, 1),
+	"left": Vector2(-1, 0),
+	"right": Vector2(1, 0)
+}
+
 signal block_push
 
 func _ready():
@@ -26,14 +33,7 @@ func _ready():
 func _fixed_process(delta):
 	delta_ = delta
 	if moving:
-		if move_dir == "up":
-			check_move(Vector2(0, -1))
-		elif move_dir == "down":
-			check_move(Vector2(0, 1))
-		elif move_dir == "left":
-			check_move(Vector2(-1, 0))
-		elif move_dir == "right":
-			check_move(Vector2(1, 0))
+		check_move(direction[move_dir])
 
 func has_block(pos):
 	return get_cellv(pos) != -1

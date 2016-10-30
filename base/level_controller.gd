@@ -64,6 +64,7 @@ func can_pass(dir, map_pos):
 		return check_push(map_posv, map_posv + direction[dir], dir)
 	if is_passable(map_posv):
 		return true
+	return false
 
 func check_push(pos, to_pos, dir):
 	print("Cheking push")

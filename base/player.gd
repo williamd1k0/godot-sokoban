@@ -15,6 +15,13 @@ var moving = false
 var move_dir = null
 var delta_ = 0
 
+var direction = {
+	"up": Vector2(0, -1),
+	"down": Vector2(0, 1),
+	"left": Vector2(-1, 0),
+	"right": Vector2(1, 0)
+}
+
 signal move_request(dir, map_pos)
 signal move_update
 
@@ -29,14 +36,8 @@ func _fixed_process(delta):
 	if not moving:
 		input_update()
 	else:
-		if move_dir == "up":
-			check_move(Vector2(0, -1))
-		elif move_dir == "down":
-			check_move(Vector2(0, 1))
-		elif move_dir == "left":
-			check_move(Vector2(-1, 0))
-		elif move_dir == "right":
-			check_move(Vector2(1, 0))
+		check_move(direction[move_dir])
+
 
 func input_update():
 	if Input.is_action_pressed("ui_up"):
