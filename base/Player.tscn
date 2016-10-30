@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=1]
+[gd_scene load_steps=17 format=1]
 
 [ext_resource path="res://base/TileMapBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://tilesets/player_tiles.tres" type="TileSet" id=2]
@@ -51,6 +51,54 @@ tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
 tracks/0/imported = false
 tracks/0/keys = { "times":FloatArray( 0 ), "transitions":FloatArray( 1 ), "update":1, "values":[ 5 ] }
+
+[sub_resource type="Animation" id=10]
+
+resource/name = "push-down"
+length = 1.2
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = { "times":FloatArray( 0, 0.3, 0.6, 0.9 ), "transitions":FloatArray( 1, 1, 1, 1 ), "update":1, "values":[ 12, 13, 14, 13 ] }
+
+[sub_resource type="Animation" id=12]
+
+resource/name = "push-left"
+length = 1.2
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = { "times":FloatArray( 0, 0.3, 0.6, 0.9 ), "transitions":FloatArray( 1, 1, 1, 1 ), "update":1, "values":[ 21, 22, 23, 22 ] }
+
+[sub_resource type="Animation" id=11]
+
+resource/name = "push-right"
+length = 1.2
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = { "times":FloatArray( 0, 0.3, 0.6, 0.9 ), "transitions":FloatArray( 1, 1, 1, 1 ), "update":1, "values":[ 18, 19, 20, 19 ] }
+
+[sub_resource type="Animation" id=9]
+
+resource/name = "push-up"
+length = 1.2
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = { "times":FloatArray( 0, 0.3, 0.6, 0.9 ), "transitions":FloatArray( 1, 1, 1, 1 ), "update":1, "values":[ 15, 16, 17, 16 ] }
 
 [sub_resource type="Animation" id=5]
 
@@ -110,7 +158,6 @@ debug = false
 
 [node name="body" type="KinematicBody2D" parent="."]
 
-visibility/visible = false
 input/pickable = false
 collision/layers = 1
 collision/mask = 1
@@ -119,8 +166,9 @@ collision/margin = 0.08
 [node name="Sprite" type="Sprite" parent="body"]
 
 texture = ExtResource( 4 )
-vframes = 12
-frame = 2
+vframes = 8
+hframes = 3
+frame = 14
 
 [node name="anime" type="AnimationPlayer" parent="body"]
 
@@ -131,6 +179,10 @@ anims/idle-down = SubResource( 1 )
 anims/idle-left = SubResource( 2 )
 anims/idle-right = SubResource( 3 )
 anims/idle-up = SubResource( 4 )
+anims/push-down = SubResource( 10 )
+anims/push-left = SubResource( 12 )
+anims/push-right = SubResource( 11 )
+anims/push-up = SubResource( 9 )
 anims/walk-down = SubResource( 5 )
 anims/walk-left = SubResource( 6 )
 anims/walk-right = SubResource( 7 )
