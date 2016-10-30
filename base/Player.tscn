@@ -158,6 +158,7 @@ debug = false
 
 [node name="body" type="KinematicBody2D" parent="."]
 
+visibility/visible = false
 input/pickable = false
 collision/layers = 1
 collision/mask = 1

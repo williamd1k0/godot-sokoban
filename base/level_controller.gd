@@ -14,6 +14,13 @@ var pushing = false
 var game_layers = null
 var game_history = []
 
+var direction = {
+	"up": Vector2(0, -1),
+	"down": Vector2(0, 1),
+	"left": Vector2(-1, 0),
+	"right": Vector2(1, 0)
+}
+
 signal start(slots_left)
 signal solved
 signal update(slots_left)
@@ -51,35 +58,12 @@ func is_passable(map_pos):
 	return true
 
 func can_pass(dir, map_pos):
-	var map_posv = null
-	if dir == "up":
-		map_posv = Vector2(map_pos.x, map_pos.y-1)
-		if blocks.has_block(map_posv):
-			return check_push(map_posv, Vector2(map_posv.x, map_posv.y-1), dir)
-		if is_passable(map_posv):
-			return true
-			
-	elif dir == "down":
-		map_posv = Vector2(map_pos.x, map_pos.y+1)
-		if blocks.has_block(map_posv):
-			return check_push(map_posv, Vector2(map_posv.x, map_posv.y+1), dir)
-		if is_passable(map_posv):
-			return true
-			
-	elif dir == "left":
-		map_posv = Vector2(map_pos.x-1, map_pos.y)
-		if blocks.has_block(map_posv):
-			return check_push(map_posv, Vector2(map_posv.x-1, map_posv.y), dir)
-		if is_passable(map_posv):
-			return true
-			
-	elif dir == "right":
-		map_posv = Vector2(map_pos.x+1, map_pos.y)
-		if blocks.has_block(map_posv):
-			return check_push(map_posv, Vector2(map_posv.x+1, map_posv.y), dir)
-		if is_passable(map_posv):
-			return true
-	return false
+	var map_posv = map_pos + direction[dir]
+	map_posv = map_pos + direction[dir]
+	if blocks.has_block(map_posv):
+		return check_push(map_posv, map_posv + direction[dir], dir)
+	if is_passable(map_posv):
+		return true
 
 func check_push(pos, to_pos, dir):
 	print("Cheking push")
