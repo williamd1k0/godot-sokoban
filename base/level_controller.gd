@@ -10,7 +10,6 @@ var slots = null
 var slot_count = 0
 var filled_slots = 0
 var move_count = 0
-var rewind_count = 0
 var pushing = false
 var game_layers = null
 var game_history = []
@@ -45,12 +44,18 @@ func push_history():
 func update_history(layer):
 	if game_history.size() <= move_count:
 		game_history.append({})
-	game_history[move_count-rewind_count][layer] = game_layers[layer].get_history()
+	game_history[move_count][layer] = game_layers[layer].get_history()
 	print(game_history)
 
 func _input(event):
-	if event.is_action_pressed("ui_select"):
+	if event.is_action_pressed("ui_cancel"):
+		if game_history.size() <= 1:
+			return
 		print(game_history[-1])
+		move_count -= 1
+		for layer in game_history[-1].keys():
+			game_layers[layer].back_history(game_history[-1][layer])
+		game_history.pop_back()
 		print("Rewind not implemented")
 
 func get_slots():
