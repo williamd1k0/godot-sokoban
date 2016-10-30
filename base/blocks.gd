@@ -5,6 +5,7 @@ export var block_id = 0
 export var reference_id = 1
 export var move_size = 64
 export var base_speed = 70
+
 var blocks = {}
 var moving_block = null
 var moving = false
@@ -18,7 +19,7 @@ var direction = {
 	"right": Vector2(1, 0)
 }
 
-signal block_push
+signal block_push(layer)
 
 func _ready():
 	for block in get_used_cells():
@@ -66,7 +67,7 @@ func update_map_pos(move):
 	blocks[moving_block].set_pos(map_to_world(to_pos) + Vector2(move_size/2, move_size/2))
 	blocks[to_pos] = blocks[moving_block]
 	blocks.erase(moving_block)
-	emit_signal("block_push")
+	emit_signal("block_push", get_name())
 
 func get_history():
 	var history = []

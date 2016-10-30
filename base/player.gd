@@ -10,7 +10,6 @@ export var base_speed = 100.0
 export var move_size = 64
 export var debug = false
 
-var moves = 0
 var moving = false
 var move_dir = null
 var delta_ = 0
@@ -23,7 +22,7 @@ var direction = {
 }
 
 signal move_request(dir, map_pos)
-signal move_update
+signal move_update(layer)
 
 func _ready():
 	set_cellv(position, reference_tile)
@@ -73,7 +72,7 @@ func update_map_pos(pos):
 	position += pos
 	set_cellv(position, reference_tile)
 	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
-	emit_signal("move_update")
+	emit_signal("move_update", get_name())
 
 
 func request_move(dir):
@@ -86,6 +85,9 @@ func accept_move(dir, mode):
 	moving = true
 	if anime.get_current_animation() != mode+"-"+dir:
 		anime.play(mode+"-"+dir)
+
+func stop_move(dir):
+	anime.play("idle-"+dir)
 
 func get_history():
 	return [position]

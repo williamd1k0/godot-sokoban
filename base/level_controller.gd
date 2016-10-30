@@ -10,6 +10,7 @@ var slots = null
 var slot_count = 0
 var filled_slots = 0
 var move_count = 0
+var rewind_count = 0
 var pushing = false
 var game_layers = null
 var game_history = []
@@ -23,7 +24,7 @@ var direction = {
 
 signal start(slots_left)
 signal solved
-signal update(slots_left)
+signal update(slots_left, moves)
 
 func _ready():
 	slots = get_slots()
@@ -37,9 +38,14 @@ func _ready():
 	emit_signal("start", slot_count)
 
 func push_history():
-	game_history.append({})
-	for layer in game_layers:
-		game_history[move_count][layer] = game_layers[layer].get_history()
+	for layer in game_layers.keys():
+		update_history(layer)
+
+
+func update_history(layer):
+	if game_history.size() <= move_count:
+		game_history.append({})
+	game_history[move_count-rewind_count][layer] = game_layers[layer].get_history()
 	print(game_history)
 
 func _input(event):
@@ -77,24 +83,31 @@ func check_push(pos, to_pos, dir):
 func _on_Player_move_request( dir, map_pos ):
 	pushing = false
 	if can_pass(dir, map_pos):
+		move_count += 1
 		if pushing:
 			player.accept_move(dir, "push")
 		else:
 			player.accept_move(dir, "walk")
 	else:
-		print("Cant Pass!!")
+		player.stop_move(dir)
+
 
 func check_slots():
 	print("Slots: "+str(filled_slots))
 	if filled_slots == slot_count:
 		emit_signal("solved")
 
-func _on_Blocks_block_push():
+func _on_Blocks_block_push( layer ):
+	update_history(layer)
 	filled_slots = 0
 	for slot in slots:
 		if blocks.has_block(slot):
 			filled_slots += 1
-	if filled_slots > 0:
-		emit_signal("update", slot_count - filled_slots)
+	emit_signal("update", slot_count - filled_slots, move_count)
 	check_slots()
 
+
+func _on_Player_move_update( layer ):
+	update_history(layer)
+	print(move_count)
+	emit_signal("update", slot_count - filled_slots, move_count)

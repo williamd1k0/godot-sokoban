@@ -30,6 +30,8 @@ passable_tiles = [ -1, 0 ]
 
 [connection signal="move_request" from="Player" to="." method="_on_Player_move_request"]
 
+[connection signal="move_update" from="Player" to="." method="_on_Player_move_update"]
+
 [connection signal="block_push" from="Blocks" to="." method="_on_Blocks_block_push"]
 
 
