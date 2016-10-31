@@ -1,7 +1,7 @@
 extends TileMap
 
-onready var start_pos = get_used_cells()[0]
-onready var position = start_pos
+onready var last_pos = get_used_cells()[0]
+onready var position = last_pos
 onready var body = get_node("body")
 onready var anime = get_node("body/anime")
 
@@ -22,7 +22,7 @@ var direction = {
 }
 
 signal move_request(dir, map_pos)
-signal move_update(layer)
+signal move_update(layer, new_pos, last_pos)
 
 func _ready():
 	set_cellv(position, reference_tile)
@@ -69,10 +69,11 @@ func check_move(move):
 
 func update_map_pos(pos):
 	set_cellv(position, -1)
+	last_pos = position
 	position += pos
 	set_cellv(position, reference_tile)
 	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
-	emit_signal("move_update", get_name())
+	emit_signal("move_update", get_name(), position, last_pos)
 
 
 func request_move(dir):
@@ -90,15 +91,12 @@ func stop_move(dir):
 	anime.play("idle-"+dir)
 
 func get_history():
-	return [position]
+	return [position, last_pos]
 
 # REWIND TODO
 func back_history(data):
-	pass
-	#if move_log.size() > 0:
-	#	set_cellv(position, -1)
-	#	position = move_log[-1]
-	#	set_cellv(position, reference_tile)
-	#	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
-	#	move_log.pop_back()
+	set_cellv(position, -1)
+	position = data[1]
+	set_cellv(position, reference_tile)
+	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
 	

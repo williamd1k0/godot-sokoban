@@ -19,7 +19,7 @@ var direction = {
 	"right": Vector2(1, 0)
 }
 
-signal block_push(layer)
+signal block_push(layer, new_pos, last_pos)
 
 func _ready():
 	for block in get_used_cells():
@@ -64,30 +64,25 @@ func update_map_pos(move):
 	var to_pos = moving_block + move
 	set_cellv(moving_block, -1)
 	set_cellv(to_pos, reference_id)
+	blocks[moving_block].last_pos = moving_block
 	blocks[moving_block].set_pos(map_to_world(to_pos) + Vector2(move_size/2, move_size/2))
 	blocks[to_pos] = blocks[moving_block]
 	blocks.erase(moving_block)
-	emit_signal("block_push", get_name())
+	emit_signal("block_push", get_name(), to_pos, moving_block)
 
 func get_history():
 	var history = []
 	for block in blocks.keys():
 		#print(world_to_map(blocks[block].get_pos()))
 		#print(get_cellv(world_to_map(blocks[block].get_pos())))
-		history.append([block, world_to_map(blocks[block].get_pos())])
+		history.append([block, blocks[block].last_pos])
 	return history
 
 
 # REWIND TODO
 func back_history(data):
-	pass
-
-func back_log():
-	for block in blocks.keys():
-		if blocks[block].move_log.size() > 0:
-			set_cellv(block, -1)
-			set_cellv(blocks[block].move_log[-1], reference_id)
-			blocks[block].set_pos(map_to_world(blocks[block].move_log[-1]) + Vector2(move_size/2, move_size/2))
-			blocks[block].move_log.pop_back()
-
-
+	print(data)
+	print(blocks)
+	set_cellv(data[0], -1)
+	set_cellv(data[1], reference_id)
+	blocks[data[0]].set_pos(map_to_world(data[1]) + Vector2(move_size/2, move_size/2))

@@ -38,20 +38,21 @@ func _ready():
 
 func push_history():
 	for layer in game_layers.keys():
-		update_history(layer)
+		update_history(layer, null, null)
 
 
-func update_history(layer):
+func update_history(layer, new_pos, last_pos):
 	if game_history.size() <= move_count:
 		game_history.append({})
-	game_history[move_count][layer] = game_layers[layer].get_history()
+	game_history[move_count][layer] = [new_pos, last_pos]
 	print(game_history)
+
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):
 		if game_history.size() <= 1:
 			return
-		print(game_history[-1])
+		#print(game_history[-1])
 		move_count -= 1
 		for layer in game_history[-1].keys():
 			game_layers[layer].back_history(game_history[-1][layer])
@@ -102,8 +103,8 @@ func check_slots():
 	if filled_slots == slot_count:
 		emit_signal("solved")
 
-func _on_Blocks_block_push( layer ):
-	update_history(layer)
+func _on_Blocks_block_push( layer, new_pos, last_pos ):
+	update_history(layer, new_pos, last_pos)
 	filled_slots = 0
 	for slot in slots:
 		if blocks.has_block(slot):
@@ -112,7 +113,7 @@ func _on_Blocks_block_push( layer ):
 	check_slots()
 
 
-func _on_Player_move_update( layer ):
-	update_history(layer)
+func _on_Player_move_update( layer, new_pos, last_pos ):
+	update_history(layer, new_pos, last_pos)
 	print(move_count)
 	emit_signal("update", slot_count - filled_slots, move_count)
