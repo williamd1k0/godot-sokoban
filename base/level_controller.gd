@@ -4,7 +4,7 @@ onready var static_tiles = get_tree().get_nodes_in_group("static-layer")
 onready var player = get_node("Player")
 onready var blocks = get_node("Blocks")
 
-export var slot_id = 1
+export var slot_id = 0
 export(NodePath) var slot_tilemap
 var slots = null
 var slot_count = 0
@@ -13,6 +13,7 @@ var move_count = 0
 var pushing = false
 var game_layers = null
 var game_history = []
+var solved = false
 
 var direction = {
 	"up": Vector2(0, -1),
@@ -39,7 +40,7 @@ func _ready():
 
 
 func _input(event):
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("ui_cancel") and not solved:
 		rewind_history()
 
 
@@ -107,6 +108,7 @@ func _on_Player_move_request( dir, map_pos ):
 func check_slots():
 	print("Slots: "+str(filled_slots))
 	if filled_slots == slot_count:
+		player.lock()
 		emit_signal("solved")
 
 func _on_Blocks_block_push( layer, new_pos, last_pos ):

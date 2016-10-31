@@ -26,19 +26,22 @@ signal move_update(layer, new_pos, last_pos)
 
 func _ready():
 	set_cellv(position, reference_tile)
-	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
+	body.move_to(map_to_world(position) + Vector2(move_size/2, move_size/2))
 	body.set_hidden(false)
 	set_fixed_process(true)
 
 func _fixed_process(delta):
 	delta_ = delta
 	if locked:
+		set_idle()
 		return
 	if not moving:
 		input_update()
 	else:
 		check_move(direction[move_dir])
 
+func lock():
+	locked = true
 
 func input_update():
 	if Input.is_action_pressed("ui_up"):
@@ -50,7 +53,10 @@ func input_update():
 	elif Input.is_action_pressed("ui_right"):
 		request_move("right")
 	else:
-		if "-" in anime.get_current_animation():
+		set_idle()
+
+func set_idle():
+	if "-" in anime.get_current_animation():
 			anime.play("idle-"+anime.get_current_animation().split("-")[1])
 
 func check_move(move):
@@ -75,7 +81,7 @@ func update_map_pos(pos):
 	var last_pos = position
 	position += pos
 	set_cellv(position, reference_tile)
-	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
+	body.move_to(map_to_world(position) + Vector2(move_size/2, move_size/2))
 	emit_signal("move_update", get_name(), position, last_pos)
 
 

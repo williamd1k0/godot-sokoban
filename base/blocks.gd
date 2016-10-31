@@ -64,7 +64,7 @@ func update_map_pos(move):
 	var to_pos = moving_block + move
 	set_cellv(moving_block, -1)
 	set_cellv(to_pos, reference_id)
-	blocks[moving_block].set_pos(map_to_world(to_pos) + Vector2(move_size/2, move_size/2))
+	blocks[moving_block].move_to(map_to_world(to_pos) + Vector2(move_size/2, move_size/2))
 	blocks[to_pos] = blocks[moving_block]
 	blocks.erase(moving_block)
 	emit_signal("block_push", get_name(), to_pos, moving_block)
