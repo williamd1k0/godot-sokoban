@@ -86,3 +86,5 @@ func back_history(data):
 	set_cellv(data[0], -1)
 	set_cellv(data[1], reference_id)
 	blocks[data[0]].set_pos(map_to_world(data[1]) + Vector2(move_size/2, move_size/2))
+	blocks[data[1]] = blocks[data[0]]
+	blocks.erase(data[0])
