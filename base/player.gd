@@ -1,7 +1,6 @@
 extends TileMap
 
-onready var last_pos = get_used_cells()[0]
-onready var position = last_pos
+onready var position = get_used_cells()[0]
 onready var body = get_node("body")
 onready var anime = get_node("body/anime")
 
@@ -11,6 +10,7 @@ export var move_size = 64
 export var debug = false
 
 var moving = false
+var locked = false
 var move_dir = null
 var delta_ = 0
 
@@ -32,6 +32,8 @@ func _ready():
 
 func _fixed_process(delta):
 	delta_ = delta
+	if locked:
+		return
 	if not moving:
 		input_update()
 	else:
@@ -48,7 +50,8 @@ func input_update():
 	elif Input.is_action_pressed("ui_right"):
 		request_move("right")
 	else:
-		anime.play("idle-"+anime.get_current_animation().split("-")[1])
+		if "-" in anime.get_current_animation():
+			anime.play("idle-"+anime.get_current_animation().split("-")[1])
 
 func check_move(move):
 	var map_pos = map_to_world(position) + Vector2(move_size/2, move_size/2)
@@ -69,7 +72,7 @@ func check_move(move):
 
 func update_map_pos(pos):
 	set_cellv(position, -1)
-	last_pos = position
+	var last_pos = position
 	position += pos
 	set_cellv(position, reference_tile)
 	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
@@ -89,14 +92,18 @@ func accept_move(dir, mode):
 
 func stop_move(dir):
 	anime.play("idle-"+dir)
+	
 
-func get_history():
-	return [position, last_pos]
-
-# REWIND TODO
 func back_history(data):
 	set_cellv(position, -1)
 	position = data[1]
 	set_cellv(position, reference_tile)
-	body.set_pos(map_to_world(position) + Vector2(move_size/2, move_size/2))
-	
+	locked = true
+	anime.play("fadeout")
+
+
+func _on_anime_finished():
+	if anime.get_current_animation() == "fadeout":
+		body.move_to(map_to_world(position) + Vector2(move_size/2, move_size/2))
+		anime.play("fadein")
+		locked = false

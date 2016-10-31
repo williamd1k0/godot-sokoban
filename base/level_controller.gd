@@ -32,32 +32,32 @@ func _ready():
 		player.get_name(): player,
 		blocks.get_name(): blocks
 	}
-	push_history()
+	init_history()
 	set_process_input(true)
 	emit_signal("start", slot_count)
-
-func push_history():
-	for layer in game_layers.keys():
-		update_history(layer, null, null)
-
-
-func update_history(layer, new_pos, last_pos):
-	if game_history.size() <= move_count:
-		game_history.append({})
-	game_history[move_count][layer] = [new_pos, last_pos]
-	print(game_history)
 
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):
 		if game_history.size() <= 1:
 			return
-		#print(game_history[-1])
 		move_count -= 1
 		for layer in game_history[-1].keys():
 			game_layers[layer].back_history(game_history[-1][layer])
 		game_history.pop_back()
-		print("Rewind not implemented")
+		emit_signal("update", slot_count - filled_slots, move_count)
+
+
+func init_history():
+	for layer in game_layers.keys():
+		update_history(layer, Vector2(0, 0), Vector2(0, 0))
+
+
+func update_history(layer, new_pos, last_pos):
+	if game_history.size() <= move_count:
+		game_history.append({})
+	game_history[move_count][layer] = [new_pos, last_pos]
+
 
 func get_slots():
 	return get_node(slot_tilemap).get_cells_by_id(slot_id)
