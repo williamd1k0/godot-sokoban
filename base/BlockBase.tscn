@@ -29,6 +29,7 @@ tracks/0/keys = { "times":FloatArray( 0, 0.5 ), "transitions":FloatArray( 1, 1 )
 
 [node name="BlockBase" type="KinematicBody2D"]
 
+visibility/visible = false
 input/pickable = false
 collision/layers = 1
 collision/mask = 1

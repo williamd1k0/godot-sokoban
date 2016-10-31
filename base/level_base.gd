@@ -17,11 +17,13 @@ func _on_LevelController_start( slots_left_ ):
 	update_moves(0)
 
 func _on_LevelController_solved():
-	get_node("gameover").set_hidden(false)
+	get_node("anime").play("solved")
 
 func _on_LevelController_update( slots_left_, moves ):
 	update_moves(moves)
 	if slots_left != slots_left_:
 		slots_left = slots_left_
 		update_slots_left(slots_left)
-		print(moves)
+
+func _on_LevelController_rewind():
+	get_node("anime").play("rewind")

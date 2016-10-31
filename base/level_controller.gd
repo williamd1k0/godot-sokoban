@@ -23,6 +23,7 @@ var direction = {
 
 signal start(slots_left)
 signal solved
+signal rewind
 signal update(slots_left, moves)
 
 func _ready():
@@ -39,13 +40,7 @@ func _ready():
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):
-		if game_history.size() <= 1:
-			return
-		move_count -= 1
-		for layer in game_history[-1].keys():
-			game_layers[layer].back_history(game_history[-1][layer])
-		game_history.pop_back()
-		emit_signal("update", slot_count - filled_slots, move_count)
+		rewind_history()
 
 
 func init_history():
@@ -57,6 +52,17 @@ func update_history(layer, new_pos, last_pos):
 	if game_history.size() <= move_count:
 		game_history.append({})
 	game_history[move_count][layer] = [new_pos, last_pos]
+
+
+func rewind_history():
+	if game_history.size() <= 1:
+		return
+	move_count -= 1
+	for layer in game_history[-1].keys():
+		game_layers[layer].back_history(game_history[-1][layer])
+	game_history.pop_back()
+	emit_signal("update", slot_count - filled_slots, move_count)
+	emit_signal("rewind")
 
 
 func get_slots():
